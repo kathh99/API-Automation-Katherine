@@ -1,0 +1,81 @@
+Read
+$ curl --request GET \
+  --url https://mailsac.com/api/addresses/{ktrp99@gmail.com}/message-count \
+  --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    38  100    38    0     0     56      0 --:--:-- --:--:-- --:--:--    56{"inbox":"ktrp99@gmail.com","count":0}
+
+
+Negative
+Email that does not exist
+$ curl --request GET \
+  --url https://mailsac.com/api/addresses/{kat.ramosp@gmail.com}/messages \
+  --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100     2  100     2    0     0      2      0  0:00:01 --:--:--  0:00:01     2[]
+
+Email of another user
+$ curl --request GET \
+  --url https://mailsac.com/api/addresses/{anything-123@mailsac.com}/message-count \
+  --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   214  100   214    0     0    328      0 --:--:-- --:--:-- --:--:--   330{"message":"anything-123@mailsac.com is owned by another account.","requestId":"msfe_67weU4DK05Ida","responseTime":"12 ms","method":"GET","path":"/api/addresses/anything-123@mailsac.com/message-count","status":403}
+
+Create
+$ curl --request PUT \
+  --url https://mailsac.com/api/addresses/{ktrp99@gmail.com}/messages/{m3phnJ2ag3example-0}/labels/business%20archive \
+  --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   264  100   264    0     0    385      0 --:--:-- --:--:-- --:--:--   388{"message":"Message not found by id m3phnJ2ag3example-0 and inbox ktrp99@gmail.com","requestId":"msfe_l2h9SzyzmP401","responseTime":"10 ms","method":"PUT","path":"/api/addresses/ktrp99@gmail.com/messages/m3phnj2ag3example-0/labels/business%20archive","status":404}
+
+Negative
+Request without a message ID
+$ curl --request PUT \
+  --url https://mailsac.com/api/addresses/{ktrp99@gmail.com}/messages/labels/business%20archive \
+  --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   101  100   101    0     0    153      0 --:--:-- --:--:-- --:--:--   154{"message":"The API route did not match a handler. Please check the path and method, and try again."}
+
+Update
+$ curl -X 'POST' \
+  'https://mailsac.com/api/validations/addresses' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "emails": [
+    "anything-123@mailsac.com",
+    "anything-456@example.com"
+  ]
+}' --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1277    0  1193  100    84   1677    118 --:--:-- --:--:-- --:--:--  1806[{"email":"anything-123@mailsac.com","domain":"mailsac.com","isValidFormat":true,"local":"anything-123","isDisposable":true,"disposableDomains":["jamieziggers.nl","orotab.com","companynotifier.com","epic.swat.rip","troops.online","dock.city","mailsac.com","smallalpaca.com","mywikitree.com","bug.cl","indozoom.net","ledoktre.com","gtmail.net","mcpsvastudents.org","politicalcowboy.com","slothmail.net","msgwire.com"],"aliases":["jamieziggers.nl","orotab.com","companynotifier.com","epic.swat.rip","troops.online","dock.city","172.67.73.183","104.26.11.208","104.26.10.208","mailsac.com","smallalpaca.com","mywikitree.com","bug.cl","indozoom.net","ledoktre.com","gtmail.net","mcpsvastudents.org","politicalcowboy.com","slothmail.net","msgwire.com","172.67.199.67","104.21.42.27","dvla.msdc.co"],"mx":[{"exchange":"in.mailsac.com","priority":1},{"exchange":"alt.mailsac.com","priority":5}],"isMailsacDeliverable":true,"lookupInfo":""},{"email":"anything-456@example.com","domain":"example.com","isValidFormat":true,"local":"anything-456","isDisposable":false,"disposableDomains":[],"aliases":["93.184.216.34",""],"mx":[{"exchange":"","priority":0}],"isMailsacDeliverable":false,"lookupInfo":""}]
+
+Negative
+Email without the email format
+$ curl -X 'POST' \
+  'https://mailsac.com/api/validations/addresses' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "emails": [
+    "anything-123@mailsac.com",
+    "ktrp99"
+  ]
+}' --header 'Mailsac-Key: k_gyezOumYMAP86UYH8hqLHzLSitMgaQRa8I0abfQ1U1tWh890'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1179    0  1113  100    66   1625     96 --:--:-- --:--:-- --:--:--  1728[{"email":"anything-123@mailsac.com","domain":"mailsac.com","isValidFormat":true,"local":"anything-123","isDisposable":true,"disposableDomains":["jamieziggers.nl","orotab.com","companynotifier.com","epic.swat.rip","troops.online","dock.city","mailsac.com","smallalpaca.com","mywikitree.com","bug.cl","indozoom.net","ledoktre.com","gtmail.net","mcpsvastudents.org","politicalcowboy.com","slothmail.net","msgwire.com"],"aliases":["jamieziggers.nl","orotab.com","companynotifier.com","epic.swat.rip","troops.online","dock.city","172.67.73.183","104.26.11.208","104.26.10.208","mailsac.com","smallalpaca.com","mywikitree.com","bug.cl","indozoom.net","ledoktre.com","gtmail.net","mcpsvastudents.org","politicalcowboy.com","slothmail.net","msgwire.com","172.67.199.67","104.21.42.27","dvla.msdc.co"],"mx":[{"exchange":"in.mailsac.com","priority":1},{"exchange":"alt.mailsac.com","priority":5}],"isMailsacDeliverable":true,"lookupInfo":""},{"email":"ktrp99","domain":"","isValidFormat":false,"local":"ktrp99","isDisposable":false,"disposableDomains":[],"aliases":[],"mx":[],"isMailsacDeliverable":false,"lookupInfo":""}]
+
+Delete
+$ curl --request DELETE \
+  --url https://mailsac.com/api/addresses/{ktrp99@gmail.com}/messages \
+  --header 'Mailsac-Key: k_cOLhLpknWnfcOwizMXWvLgGf0JhfclmVE458CENeb42P2Yc6'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   217  100   217    0     0    307      0 --:--:-- --:--:-- --:--:--   308{"message":"Cannot delete messages for inbox that is not owned by this account","requestId":"msfe_e1fxcr843WA98","responseTime":"18 ms","method":"DELETE","path":"/api/addresses/ktrp99@gmail.com/messages","status":401}
